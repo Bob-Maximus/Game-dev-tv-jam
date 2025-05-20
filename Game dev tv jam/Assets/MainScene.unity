@@ -199,7 +199,7 @@ MonoBehaviour:
   map: {fileID: 135956534}
   xPos: 0
   yPos: 0
-  timeBetweenMoves: 0.1
+  timeBetweenMoves: 0.15
 --- !u!212 &923725610
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -242,7 +242,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 0, g: 1, b: 0.09750295, a: 1}
   m_FlipX: 0
