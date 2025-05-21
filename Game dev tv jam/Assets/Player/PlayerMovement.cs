@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
 
     public int xPos, yPos;
 
-    private bool hasMoved;
+    public bool hasMoved;
 
     private float timer = 0;
     public float timeBetweenMoves;
