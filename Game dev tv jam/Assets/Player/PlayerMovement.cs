@@ -25,6 +25,14 @@ public class PlayerMovement : MonoBehaviour
     {
         timer += Time.deltaTime;
 
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) ||
+        Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) ||
+        Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) ||
+        Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+    {
+        timer = timeBetweenMoves; // Make it act like cooldown has passed
+    }
+
         if (timer >= timeBetweenMoves)
         {
             timer = 0;
