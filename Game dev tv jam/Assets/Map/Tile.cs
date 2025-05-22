@@ -7,4 +7,6 @@ public class Tile : MonoBehaviour
     public bool occupied;
 
     public GameObject occupiedBy;
+
+    public bool seen;
 }

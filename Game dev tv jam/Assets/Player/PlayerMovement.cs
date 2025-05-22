@@ -12,76 +12,65 @@ public class PlayerMovement : MonoBehaviour
 
     public bool hasMoved;
 
-    private float timer = 0;
-    public float timeBetweenMoves;
+    //private float timer = 0;
+    //public float timeBetweenMoves;
 
-    void Start()
+    public void Tick()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        timer += Time.deltaTime;
-
+        /*
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) ||
-        Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) ||
-        Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) ||
-        Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-    {
-        timer = timeBetweenMoves; // Make it act like cooldown has passed
-    }
-
-        if (timer >= timeBetweenMoves)
+            Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) ||
+            Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) ||
+            Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            timer = 0;
-
-            if (hasMoved)
-            {
-                map.map[xPos][yPos].GetComponent<Tile>().occupied = false;
-                map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = null;
-
-                hasMoved = false;
-            }
-
-            Movement();
-
-            transform.position = map.map[xPos][yPos].transform.position;
-
-            map.map[xPos][yPos].GetComponent<Tile>().occupied = true;
-            map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = gameObject;
+            timer = timeBetweenMoves; // Make it act like cooldown has passed
         }
+        */
+
+        if (hasMoved)
+        {
+            map.map[xPos][yPos].GetComponent<Tile>().occupied = false;
+            map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = null;
+
+            hasMoved = false;
+        }
+
+        Movement();
+
+        transform.position = map.map[xPos][yPos].transform.position;
+
+        map.map[xPos][yPos].GetComponent<Tile>().occupied = true;
+        map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = gameObject;
     }
 
-    private void Movement()
+    public void Movement()
     {
         if (yPos < map.sizeY - 1 && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)))
         {
             hasMoved = true;
             yPos += 1;
-            return; 
+            return;
         }
-        
+
         if (yPos > 0 && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
         {
             hasMoved = true;
             yPos -= 1;
-            return; 
+            return;
         }
 
         if (xPos > 0 && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
         {
             hasMoved = true;
             xPos -= 1;
-            return; 
+            return;
         }
 
         if (xPos < map.sizeX - 1 && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
         {
             hasMoved = true;
             xPos += 1;
-            return; 
+            return;
         }
     }
 }

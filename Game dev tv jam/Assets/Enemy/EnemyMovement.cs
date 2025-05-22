@@ -10,41 +10,23 @@ public class EnemyMovement : MonoBehaviour
     public Map map;
     public PlayerMovement player;
 
-    private bool canMove = false;
-
     private int xPos, yPos;
 
-    public int ranNum;
     void Start()
     {
-        xPos = 5;
-        yPos = 5;
+        xPos = Random.Range(0, map.sizeX - 1);
+        yPos = Random.Range(0, map.sizeY - 1);
     }
 
     // Update is called once per frame
     void Update()
-    {
-        Debug.Log("Enemy Position: " + xPos + ", " + yPos);
-        
-        canMove = player.hasMoved;
-
-
-        if (canMove)
-        {
-            Movement();
-            transform.position = map.map[xPos][yPos].transform.position;
-            canMove = false;
-            player.hasMoved = false;
-        }
-
-
-
+    {        
+        transform.position = map.map[xPos][yPos].transform.position;
     }
 
-    private void Movement()
+    public void Movement()
     {
-        ranNum = Random.Range(0, 2);
-        if (ranNum == 0)
+        if (Random.Range(0, 2) == 0)
         {
             xPos += Random.Range(-1, 2);
         }
@@ -53,7 +35,7 @@ public class EnemyMovement : MonoBehaviour
             yPos += Random.Range(-1, 2);
         }
 
-
+        xPos = Mathf.Clamp(xPos, 0, map.sizeX - 1);
+        yPos = Mathf.Clamp(yPos, 0, map.sizeY - 1);
     }
-
 }
