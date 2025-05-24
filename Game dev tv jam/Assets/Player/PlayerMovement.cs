@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool hasMoved;
 
+    public int visionRadious;
+
     //private float timer = 0;
     //public float timeBetweenMoves;
 
@@ -45,32 +47,37 @@ public class PlayerMovement : MonoBehaviour
 
     public void Movement()
     {
+        int nXPos = xPos;
+        int nYPos = yPos;
+
         if (yPos < map.sizeY - 1 && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)))
         {
             hasMoved = true;
-            yPos += 1;
-            return;
+            nYPos += 1;
         }
 
         if (yPos > 0 && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
         {
             hasMoved = true;
-            yPos -= 1;
-            return;
+            nYPos -= 1;
         }
 
         if (xPos > 0 && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
         {
             hasMoved = true;
-            xPos -= 1;
-            return;
+            nXPos -= 1;
         }
 
         if (xPos < map.sizeX - 1 && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
         {
             hasMoved = true;
-            xPos += 1;
-            return;
+            nXPos += 1;
+        }
+
+        if (!map.map[nXPos][nYPos].GetComponent<Tile>().unWalkable)
+        {
+            xPos = nXPos;
+            yPos = nYPos;
         }
     }
 }

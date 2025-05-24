@@ -149,8 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tile: {fileID: 986598756012602756, guid: 47cead78e895bfd4e926a2215255504f, type: 3}
-  sizeX: 10
-  sizeY: 10
+  sizeX: 30
+  sizeY: 30
+  messyness: 0.5
+  messynessAdd: 1
 --- !u!4 &135956535
 Transform:
   m_ObjectHideFlags: 0
@@ -301,6 +303,7 @@ MonoBehaviour:
   xPos: 0
   yPos: 0
   hasMoved: 0
+  visionRadious: 3
 --- !u!212 &923725610
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -657,6 +660,7 @@ MonoBehaviour:
   tickSpeed: 0.2
   player: {fileID: 923725609}
   enemies: []
+  map: {fileID: 135956533}
 --- !u!4 &2140956265
 Transform:
   m_ObjectHideFlags: 0

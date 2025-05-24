@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,6 +10,9 @@ public class Map : MonoBehaviour
     public List<List<GameObject>> map = new List<List<GameObject>>();
 
     public int sizeX, sizeY;
+
+    public float messyness;
+    public float messynessAdd;
 
 
     // Start is called before the first frame update
@@ -30,6 +33,37 @@ public class Map : MonoBehaviour
             }
 
             map.Add(yPos);
+        }
+
+        for (int xPos = 0; xPos < map.Count; xPos++)
+        {
+            for (int yPos = 0; yPos < map.Count; yPos++)
+            {
+                int numOfUnwalk = 0;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    if (sizeX > xPos + i - 1 && xPos + i - 1 > 0 && sizeY > yPos + 1 && yPos + 1 > 0 && i < 4 && map[xPos + i - 1][yPos + 1].GetComponent<Tile>().unWalkable)
+                    {
+                        numOfUnwalk += 1;
+                    }
+                    else if (sizeX > xPos + (2 * i) - 11 && xPos + (2 * i) - 11 > 0 &&  i < 6 && map[xPos + (2 * i) - 11][yPos].GetComponent<Tile>().unWalkable)
+                    {
+                        numOfUnwalk += 1;
+                    }
+                    else if (sizeX > xPos + i - 8 && xPos + i - 8 > 0 && sizeY > yPos - 1 && yPos - 1 > 0 && i > 5 && map[xPos + i - 8][yPos - 1].GetComponent<Tile>().unWalkable)
+                    {
+                        numOfUnwalk += 1;
+                    }
+                }
+
+                float walkableNum = UnityEngine.Random.Range(-1, (numOfUnwalk * messyness) + messynessAdd);
+                if (walkableNum < 0)
+                {
+                    map[xPos][yPos].GetComponent<Tile>().unWalkable = true;
+                    map[xPos][yPos].GetComponent<SpriteRenderer>().color = Color.blue;
+                }
+            }
         }
     }
 

@@ -26,16 +26,25 @@ public class EnemyMovement : MonoBehaviour
 
     public void Movement()
     {
+        int nXPos = xPos;
+        int nYPos = yPos;
+
         if (Random.Range(0, 2) == 0)
         {
-            xPos += Random.Range(-1, 2);
+            nXPos += Random.Range(-1, 2);
         }
         else
         {
-            yPos += Random.Range(-1, 2);
+            nYPos += Random.Range(-1, 2);
         }
 
-        xPos = Mathf.Clamp(xPos, 0, map.sizeX - 1);
-        yPos = Mathf.Clamp(yPos, 0, map.sizeY - 1);
+        nXPos = Mathf.Clamp(nXPos, 0, map.sizeX - 1);
+        nYPos = Mathf.Clamp(nYPos, 0, map.sizeY - 1);
+
+        if (!map.map[nXPos][nYPos].GetComponent<Tile>().unWalkable)
+        {
+            xPos = nXPos;
+            yPos = nYPos;
+        }
     }
 }
