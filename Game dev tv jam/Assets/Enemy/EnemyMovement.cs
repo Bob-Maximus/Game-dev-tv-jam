@@ -8,15 +8,36 @@ public class EnemyMovement : MonoBehaviour
 
     public int xPos, yPos;
 
+    public Sprite[] animationFrames;
+    public float animationSpeed = 0.1f;
+
+    private SpriteRenderer spriteRenderer;
+    private int currentFrame = 0;
+    private float frameTimer = 0f;
+
     void Start()
     {
         xPos = Random.Range(0, map.sizeX);
         yPos = Random.Range(0, map.sizeY);
+
+        transform.localScale = new Vector3(3f, 3f, 1f);
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = animationFrames[0];
     }
 
     void Update()
     {
         transform.position = map.map[xPos][yPos].transform.position;
+
+        frameTimer += Time.deltaTime;
+        if (frameTimer >= animationSpeed)
+        {
+            currentFrame = (currentFrame + 1) % animationFrames.Length;
+            spriteRenderer.sprite = animationFrames[currentFrame];
+            frameTimer = 0f;
+        }
+
     }
 
     public void MoveTowardsPlayer()
@@ -26,7 +47,7 @@ public class EnemyMovement : MonoBehaviour
 
         List<Vector2Int> path = FindShortestPath(start, target);
 
-        if (path.Count > 1) // path[0] is current position, path[1] is next step
+        if (path.Count > 1)
         {
             xPos = path[1].x;
             yPos = path[1].y;
@@ -41,10 +62,10 @@ public class EnemyMovement : MonoBehaviour
     private List<Vector2Int> FindShortestPath(Vector2Int start, Vector2Int target)
     {
         Vector2Int[] directions = {
-            new Vector2Int(0, 1),  // down
-            new Vector2Int(0, -1), // up
-            new Vector2Int(1, 0),  // right
-            new Vector2Int(-1, 0)  // left
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1),
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0)
         };
 
         Queue<(Vector2Int, List<Vector2Int>)> queue = new Queue<(Vector2Int, List<Vector2Int>)>();
@@ -58,16 +79,13 @@ public class EnemyMovement : MonoBehaviour
             var (currentPos, path) = queue.Dequeue();
 
             if (currentPos == target)
-            {
                 return path;
-            }
 
             foreach (var dir in directions)
             {
                 int x = currentPos.x + dir.x;
                 int y = currentPos.y + dir.y;
 
-                // Check bounds
                 if (x < 0 || x >= map.sizeX || y < 0 || y >= map.sizeY)
                     continue;
 
@@ -79,7 +97,6 @@ public class EnemyMovement : MonoBehaviour
                 if (map.map[x][y].GetComponent<Tile>().unWalkable)
                     continue;
 
-                // Valid next position
                 checkedTiles.Add(nextPos);
 
                 List<Vector2Int> newPath = new List<Vector2Int>(path) { nextPos };
@@ -87,10 +104,8 @@ public class EnemyMovement : MonoBehaviour
             }
         }
 
-        // If stuck, stay in place
         return new List<Vector2Int> { start };
     }
-
 
     private void GameOver()
     {

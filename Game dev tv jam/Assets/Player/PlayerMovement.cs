@@ -1,46 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-
 
 public class PlayerMovement : MonoBehaviour
 {
     public Map map;
 
     public int xPos, yPos;
-
     public bool hasMoved;
-
     public int visionRadious;
 
-    //private float timer = 0;
-    //public float timeBetweenMoves;
+    public Sprite[] walkSprites;
+    private SpriteRenderer spriteRenderer;
+    private int currentSpriteIndex;
+    private float animationTimer;
+    public float animationSpeed = 0.15f;
 
     void Start()
     {
-    xPos = map.sizeX / 2;
-    yPos = map.sizeY / 2;
+        xPos = map.sizeX / 2;
+        yPos = map.sizeY / 2;
 
-    transform.position = map.map[xPos][yPos].transform.position;
+        transform.localScale = new Vector3(3f, 3f, 1f);
 
-    map.map[xPos][yPos].GetComponent<Tile>().occupied = true;
-    map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = gameObject;
+        transform.position = map.map[xPos][yPos].transform.position;
+        map.map[xPos][yPos].GetComponent<Tile>().occupied = true;
+        map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = gameObject;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        currentSpriteIndex = 0;
+        animationTimer = animationSpeed;
+        spriteRenderer.sprite = walkSprites[currentSpriteIndex];
     }
 
+    void Update()
+    {
+        AnimateWalk();
+    }
 
     public void Tick()
     {
-        /*
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) ||
-            Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) ||
-            Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) ||
-            Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            timer = timeBetweenMoves; // Make it act like cooldown has passed
-        }
-        */
-
         if (hasMoved)
         {
             map.map[xPos][yPos].GetComponent<Tile>().occupied = false;
@@ -52,7 +51,6 @@ public class PlayerMovement : MonoBehaviour
         Movement();
 
         transform.position = map.map[xPos][yPos].transform.position;
-
         map.map[xPos][yPos].GetComponent<Tile>().occupied = true;
         map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = gameObject;
     }
@@ -90,6 +88,25 @@ public class PlayerMovement : MonoBehaviour
         {
             xPos = nXPos;
             yPos = nYPos;
+        }
+    }
+
+    void AnimateWalk()
+    {
+        if (hasMoved)
+        {
+            animationTimer -= Time.deltaTime;
+            if (animationTimer <= 0f)
+            {
+                animationTimer = animationSpeed;
+                currentSpriteIndex = (currentSpriteIndex + 1) % walkSprites.Length;
+                spriteRenderer.sprite = walkSprites[currentSpriteIndex];
+            }
+        }
+        else
+        {
+            currentSpriteIndex = 0;
+            spriteRenderer.sprite = walkSprites[currentSpriteIndex];
         }
     }
 }

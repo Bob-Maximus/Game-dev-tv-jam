@@ -9,21 +9,31 @@ public class Map : MonoBehaviour
 
     public int sizeX, sizeY;
 
+    public Sprite[] tileSprites;    // 0..2 walkable tiles, 3 = unwalkable tile sprite
+    public Sprite chestSprite;      // assign chest sprite in inspector
+
+    private GameObject chest;       // reference to spawned chest
+
+    public int chestX { get; private set; }
+    public int chestY { get; private set; }
+
     void Start()
     {
-        // Create grid of tiles
         for (int x = 0; x < sizeY; x++)
         {
             List<GameObject> row = new List<GameObject>();
 
             for (int y = 0; y < sizeX; y++)
             {
-                var square = Instantiate(tile, new Vector3(x, y, 0), quaternion.Euler(0, 0, 0));
+                var square = Instantiate(tile, new Vector3(x, y, 0), quaternion.identity);
                 square.name = "tile (" + x + ", " + y + ")";
                 square.transform.parent = gameObject.transform;
 
                 square.GetComponent<Tile>().unWalkable = false;
-                square.GetComponent<SpriteRenderer>().color = Color.white;
+
+                SpriteRenderer sr = square.GetComponent<SpriteRenderer>();
+                sr.sprite = tileSprites[UnityEngine.Random.Range(0, 3)];
+                sr.color = Color.white;
 
                 row.Add(square);
             }
@@ -31,47 +41,38 @@ public class Map : MonoBehaviour
             map.Add(row);
         }
 
-        // Now assign unwalkable tiles with clustering but preventing full blockage
         for (int x = 0; x < sizeY; x++)
         {
             for (int y = 0; y < sizeX; y++)
             {
                 int neighbors = CountUnwalkableNeighbors(x, y);
 
-                // Avoid too dense: skip if surrounded by many unwalkable tiles
                 if (neighbors >= 4)
-                {
-                    continue; // skip to prevent big clusters or isolated blocked tiles
-                }
+                    continue;
 
                 bool makeUnwalkable = false;
 
                 if (neighbors == 0)
-                {
-                    // Chance to start new cluster — lower to reduce density
-                    makeUnwalkable = UnityEngine.Random.value < 0.15f; // 15%
-                }
+                    makeUnwalkable = UnityEngine.Random.value < 0.15f;
                 else if (neighbors <= 3)
-                {
-                    // Moderate chance to grow cluster
-                    makeUnwalkable = UnityEngine.Random.value < 0.2f; // 50%
-                }
+                    makeUnwalkable = UnityEngine.Random.value < 0.2f;
 
                 if (makeUnwalkable)
                 {
                     map[x][y].GetComponent<Tile>().unWalkable = true;
-                    map[x][y].GetComponent<SpriteRenderer>().color = Color.blue;
+                    map[x][y].GetComponent<SpriteRenderer>().sprite = tileSprites[3]; // unwalkable tile sprite
+                    map[x][y].transform.localScale = new Vector3(0.89f, 0.89f, 1f);
+                }
 
-                    // Check if tile becomes isolated (all neighbors unwalkable)
-                    if (CountUnwalkableNeighbors(x, y) == 8)
-                    {
-                        // Undo it to avoid blocking player
-                        map[x][y].GetComponent<Tile>().unWalkable = false;
-                        map[x][y].GetComponent<SpriteRenderer>().color = Color.white;
-                    }
+                if (CountUnwalkableNeighbors(x, y) == 8)
+                {
+                    map[x][y].GetComponent<Tile>().unWalkable = false;
+                    map[x][y].GetComponent<SpriteRenderer>().color = Color.white;
                 }
             }
         }
+
+        SpawnChest();
     }
 
     int CountUnwalkableNeighbors(int x, int y)
@@ -98,8 +99,30 @@ public class Map : MonoBehaviour
         return count;
     }
 
-    void Update()
+    void SpawnChest()
     {
-        
+        int x, y;
+
+        // Find random walkable and unoccupied tile
+        do
+        {
+            x = UnityEngine.Random.Range(0, sizeY);
+            y = UnityEngine.Random.Range(0, sizeX);
+
+        }
+        while (map[x][y].GetComponent<Tile>().unWalkable || map[x][y].GetComponent<Tile>().occupied);
+
+        chestX = x;
+        chestY = y;
+
+        chest = new GameObject("Chest");
+        chest.transform.position = map[x][y].transform.position;
+
+        SpriteRenderer sr = chest.AddComponent<SpriteRenderer>();
+        sr.sprite = chestSprite;
+        sr.sortingOrder = 1;
+
+        map[x][y].GetComponent<Tile>().occupied = true;
+        map[x][y].GetComponent<Tile>().occupiedBy = chest;
     }
 }
