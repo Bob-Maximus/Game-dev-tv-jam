@@ -1,50 +1,100 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     public Map map;
     public PlayerMovement player;
 
-    private int xPos, yPos;
+    public int xPos, yPos;
 
     void Start()
     {
-        xPos = Random.Range(0, map.sizeX - 1);
-        yPos = Random.Range(0, map.sizeY - 1);
+        xPos = Random.Range(0, map.sizeX);
+        yPos = Random.Range(0, map.sizeY);
     }
 
-    // Update is called once per frame
     void Update()
-    {        
+    {
         transform.position = map.map[xPos][yPos].transform.position;
     }
 
-    public void Movement()
+    public void MoveTowardsPlayer()
     {
-        int nXPos = xPos;
-        int nYPos = yPos;
+        Vector2Int start = new Vector2Int(xPos, yPos);
+        Vector2Int target = new Vector2Int(player.xPos, player.yPos);
 
-        if (Random.Range(0, 2) == 0)
+        List<Vector2Int> path = FindShortestPath(start, target);
+
+        if (path.Count > 1) // path[0] is current position, path[1] is next step
         {
-            nXPos += Random.Range(-1, 2);
+            xPos = path[1].x;
+            yPos = path[1].y;
+
+            if (xPos == player.xPos && yPos == player.yPos)
+            {
+                GameOver();
+            }
         }
-        else
+    }
+
+    private List<Vector2Int> FindShortestPath(Vector2Int start, Vector2Int target)
+    {
+        Vector2Int[] directions = {
+            new Vector2Int(0, 1),  // down
+            new Vector2Int(0, -1), // up
+            new Vector2Int(1, 0),  // right
+            new Vector2Int(-1, 0)  // left
+        };
+
+        Queue<(Vector2Int, List<Vector2Int>)> queue = new Queue<(Vector2Int, List<Vector2Int>)>();
+        HashSet<Vector2Int> checkedTiles = new HashSet<Vector2Int>();
+
+        queue.Enqueue((start, new List<Vector2Int> { start }));
+        checkedTiles.Add(start);
+
+        while (queue.Count > 0)
         {
-            nYPos += Random.Range(-1, 2);
+            var (currentPos, path) = queue.Dequeue();
+
+            if (currentPos == target)
+            {
+                return path;
+            }
+
+            foreach (var dir in directions)
+            {
+                int x = currentPos.x + dir.x;
+                int y = currentPos.y + dir.y;
+
+                // Check bounds
+                if (x < 0 || x >= map.sizeX || y < 0 || y >= map.sizeY)
+                    continue;
+
+                Vector2Int nextPos = new Vector2Int(x, y);
+
+                if (checkedTiles.Contains(nextPos))
+                    continue;
+
+                if (map.map[x][y].GetComponent<Tile>().unWalkable)
+                    continue;
+
+                // Valid next position
+                checkedTiles.Add(nextPos);
+
+                List<Vector2Int> newPath = new List<Vector2Int>(path) { nextPos };
+                queue.Enqueue((nextPos, newPath));
+            }
         }
 
-        nXPos = Mathf.Clamp(nXPos, 0, map.sizeX - 1);
-        nYPos = Mathf.Clamp(nYPos, 0, map.sizeY - 1);
+        // If stuck, stay in place
+        return new List<Vector2Int> { start };
+    }
 
-        if (!map.map[nXPos][nYPos].GetComponent<Tile>().unWalkable)
-        {
-            xPos = nXPos;
-            yPos = nYPos;
-        }
+
+    private void GameOver()
+    {
+        Debug.Log("Game Over! Enemy reached the player.");
+        
     }
 }

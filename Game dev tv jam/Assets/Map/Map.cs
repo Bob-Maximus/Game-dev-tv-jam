@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -6,68 +5,99 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     public GameObject tile;
-    //public List<GameObject> xPos;
     public List<List<GameObject>> map = new List<List<GameObject>>();
 
     public int sizeX, sizeY;
 
-    public float messyness;
-    public float messynessAdd;
-
-
-    // Start is called before the first frame update
     void Start()
     {
+        // Create grid of tiles
         for (int x = 0; x < sizeY; x++)
         {
-            List<GameObject> yPos = new List<GameObject>();
+            List<GameObject> row = new List<GameObject>();
 
             for (int y = 0; y < sizeX; y++)
             {
                 var square = Instantiate(tile, new Vector3(x, y, 0), quaternion.Euler(0, 0, 0));
-
                 square.name = "tile (" + x + ", " + y + ")";
                 square.transform.parent = gameObject.transform;
 
-                yPos.Add(square);
+                square.GetComponent<Tile>().unWalkable = false;
+                square.GetComponent<SpriteRenderer>().color = Color.white;
+
+                row.Add(square);
             }
 
-            map.Add(yPos);
+            map.Add(row);
         }
 
-        for (int xPos = 0; xPos < map.Count; xPos++)
+        // Now assign unwalkable tiles with clustering but preventing full blockage
+        for (int x = 0; x < sizeY; x++)
         {
-            for (int yPos = 0; yPos < map.Count; yPos++)
+            for (int y = 0; y < sizeX; y++)
             {
-                int numOfUnwalk = 0;
+                int neighbors = CountUnwalkableNeighbors(x, y);
 
-                for (int i = 0; i < 8; i++)
+                // Avoid too dense: skip if surrounded by many unwalkable tiles
+                if (neighbors >= 4)
                 {
-                    if (sizeX > xPos + i - 1 && xPos + i - 1 > 0 && sizeY > yPos + 1 && yPos + 1 > 0 && i < 4 && map[xPos + i - 1][yPos + 1].GetComponent<Tile>().unWalkable)
-                    {
-                        numOfUnwalk += 1;
-                    }
-                    else if (sizeX > xPos + (2 * i) - 11 && xPos + (2 * i) - 11 > 0 &&  i < 6 && map[xPos + (2 * i) - 11][yPos].GetComponent<Tile>().unWalkable)
-                    {
-                        numOfUnwalk += 1;
-                    }
-                    else if (sizeX > xPos + i - 8 && xPos + i - 8 > 0 && sizeY > yPos - 1 && yPos - 1 > 0 && i > 5 && map[xPos + i - 8][yPos - 1].GetComponent<Tile>().unWalkable)
-                    {
-                        numOfUnwalk += 1;
-                    }
+                    continue; // skip to prevent big clusters or isolated blocked tiles
                 }
 
-                float walkableNum = UnityEngine.Random.Range(-1, (numOfUnwalk * messyness) + messynessAdd);
-                if (walkableNum < 0)
+                bool makeUnwalkable = false;
+
+                if (neighbors == 0)
                 {
-                    map[xPos][yPos].GetComponent<Tile>().unWalkable = true;
-                    map[xPos][yPos].GetComponent<SpriteRenderer>().color = Color.blue;
+                    // Chance to start new cluster — lower to reduce density
+                    makeUnwalkable = UnityEngine.Random.value < 0.15f; // 15%
+                }
+                else if (neighbors <= 3)
+                {
+                    // Moderate chance to grow cluster
+                    makeUnwalkable = UnityEngine.Random.value < 0.2f; // 50%
+                }
+
+                if (makeUnwalkable)
+                {
+                    map[x][y].GetComponent<Tile>().unWalkable = true;
+                    map[x][y].GetComponent<SpriteRenderer>().color = Color.blue;
+
+                    // Check if tile becomes isolated (all neighbors unwalkable)
+                    if (CountUnwalkableNeighbors(x, y) == 8)
+                    {
+                        // Undo it to avoid blocking player
+                        map[x][y].GetComponent<Tile>().unWalkable = false;
+                        map[x][y].GetComponent<SpriteRenderer>().color = Color.white;
+                    }
                 }
             }
         }
     }
 
-    // Update is called once per frame
+    int CountUnwalkableNeighbors(int x, int y)
+    {
+        int count = 0;
+
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+
+                int nx = x + dx;
+                int ny = y + dy;
+
+                if (nx >= 0 && nx < sizeY && ny >= 0 && ny < sizeX)
+                {
+                    if (map[nx][ny].GetComponent<Tile>().unWalkable)
+                        count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
     void Update()
     {
         
