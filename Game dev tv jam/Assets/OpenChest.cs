@@ -10,6 +10,7 @@ public class OpenChest : MonoBehaviour
 
     void Start()
     {
+        transform.localScale = new Vector3(3f, 3f, 1f);
         SpawnChest();
     }
 

@@ -156,6 +156,7 @@ MonoBehaviour:
   - {fileID: 708134574, guid: fc1679e5d3aa340478f06e9a1e3bdb8f, type: 3}
   - {fileID: -600017446, guid: fc1679e5d3aa340478f06e9a1e3bdb8f, type: 3}
   - {fileID: 6956764507690371452, guid: fc1679e5d3aa340478f06e9a1e3bdb8f, type: 3}
+  chestSprite: {fileID: 0}
 --- !u!4 &135956535
 Transform:
   m_ObjectHideFlags: 0
@@ -312,9 +313,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   map: {fileID: 135956534}
   player: {fileID: 923725609}
-  chestSprite: {fileID: -5281422124547630143, guid: 41d8517c6b85c43fd8bdba225250de8f, type: 3}
-  chestX: 0
-  chestY: 0
 --- !u!212 &326294619
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -357,9 +355,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: -5281422124547630143, guid: 41d8517c6b85c43fd8bdba225250de8f, type: 3}
+  m_Color: {r: 0.28235295, g: 0.28235295, b: 0.28235295, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
