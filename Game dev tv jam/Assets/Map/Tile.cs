@@ -27,14 +27,8 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            if (unWalkable)
-            {
-                sprite.color = Color.blue;
-            }
-            else
-            {
-                sprite.color = Color.white;
-            }   
+            sprite.color = Color.white;
+      
         }
     }
 
