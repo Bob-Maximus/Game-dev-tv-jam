@@ -1,5 +1,4 @@
-# Game dev tv jam
+# GameDev.tv Game Jam 2025
 
 Credits:
-- Ground tile sprites from Cup Nooble free asset pack
-
+- All assets from Sprout Lands by Cup Nooble
