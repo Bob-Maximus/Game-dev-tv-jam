@@ -17,6 +17,18 @@ public class PlayerMovement : MonoBehaviour
     //private float timer = 0;
     //public float timeBetweenMoves;
 
+    void Start()
+    {
+    xPos = map.sizeX / 2;
+    yPos = map.sizeY / 2;
+
+    transform.position = map.map[xPos][yPos].transform.position;
+
+    map.map[xPos][yPos].GetComponent<Tile>().occupied = true;
+    map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = gameObject;
+    }
+
+
     public void Tick()
     {
         /*

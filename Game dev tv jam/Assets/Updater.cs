@@ -29,22 +29,36 @@ public class Updater : MonoBehaviour
     }
 
     public void UpdateGame()
+{
+    player.Tick();
+
+    foreach (EnemyMovement enemy in enemies)
     {
-        player.Tick();
+        enemy.MoveTowardsPlayer();
 
-        foreach (EnemyMovement enemy in enemies)
+        // Darken enemy if outside player's vision
+        float dist = Vector2.Distance(new Vector2(enemy.xPos, enemy.yPos), new Vector2(player.xPos, player.yPos));
+        SpriteRenderer enemySprite = enemy.GetComponent<SpriteRenderer>();
+
+        if (dist > player.visionRadious)
         {
-            enemy.Movement();
+            enemySprite.color = Color.black; // or semi-transparent, e.g. new Color(1,1,1,0.3f)
         }
-
-        for (int xPos = 0; xPos < map.GetComponent<Map>().sizeX; xPos++)
+        else
         {
-            for (int yPos = 0; yPos < map.GetComponent<Map>().sizeY; yPos++)
-            {
-                DarkOrNot(xPos, yPos);
-            }
+            enemySprite.color = Color.red; // normal visible color
         }
     }
+
+    for (int xPos = 0; xPos < map.GetComponent<Map>().sizeX; xPos++)
+    {
+        for (int yPos = 0; yPos < map.GetComponent<Map>().sizeY; yPos++)
+        {
+            DarkOrNot(xPos, yPos);
+        }
+    }
+}
+
 
     public void DarkOrNot(int posX, int posY)
     {
@@ -58,4 +72,5 @@ public class Updater : MonoBehaviour
             map.GetComponent<Map>().map[posX][posY].GetComponent<Tile>().dark = false;
         }
     }
+    
 }
