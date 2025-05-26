@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Updater : MonoBehaviour
 {
@@ -25,6 +26,16 @@ public class Updater : MonoBehaviour
         {
             UpdateGame();
         }
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void GoBack()
+    {
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void UpdateGame()
@@ -79,5 +90,19 @@ public class Updater : MonoBehaviour
         {
             map.GetComponent<Map>().map[posX][posY].GetComponent<Tile>().dark = false;
         }
+    }
+
+
+    public GameObject winUi;
+    public void Win()
+    {
+        winUi.SetActive(true);
+    }
+    
+    public GameObject loseUi;
+
+    public void Lose()
+    {
+        loseUi.SetActive(true);
     }
 }

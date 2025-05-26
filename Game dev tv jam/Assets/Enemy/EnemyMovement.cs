@@ -17,6 +17,10 @@ public class EnemyMovement : MonoBehaviour
 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("player").GetComponent<PlayerMovement>();
+        map = GameObject.FindGameObjectWithTag("map").GetComponent<Map>();
+
+
         xPos = Random.Range(0, map.sizeX);
         yPos = Random.Range(0, map.sizeY);
 
@@ -28,7 +32,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        transform.position = map.map[xPos][yPos].transform.position;
+        transform.position = Vector3.Lerp(transform.position, map.map[xPos][yPos].transform.position, Time.deltaTime*5f);
 
         frameTimer += Time.deltaTime;
         if (frameTimer >= animationSpeed)
@@ -109,7 +113,6 @@ public class EnemyMovement : MonoBehaviour
 
     private void GameOver()
     {
-        Debug.Log("Game Over! Enemy reached the player.");
-        
+        GameObject.Find("Updater").GetComponent<Updater>().Lose();        
     }
 }

@@ -16,8 +16,11 @@ public class PlayerMovement : MonoBehaviour
     private float animationTimer;
     public float animationSpeed = 0.15f;
 
-    void Start()
+    public bool playing;
+
+    public void Start()
     {
+        playing = true;
         xPos = map.sizeX / 2;
         yPos = map.sizeY / 2;
 
@@ -35,7 +38,11 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        AnimateWalk();
+        if (playing)
+        {
+            AnimateWalk();
+            transform.position = Vector3.Lerp(transform.position, map.map[xPos][yPos].transform.position, Time.deltaTime * 5f);
+        }
     }
 
     public void Tick()
@@ -50,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
 
         Movement();
 
-        transform.position = map.map[xPos][yPos].transform.position;
         map.map[xPos][yPos].GetComponent<Tile>().occupied = true;
         map.map[xPos][yPos].GetComponent<Tile>().occupiedBy = gameObject;
     }

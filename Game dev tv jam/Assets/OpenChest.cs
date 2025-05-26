@@ -10,11 +10,11 @@ public class OpenChest : MonoBehaviour
 
     void Start()
     {
-        transform.localScale = new Vector3(3f, 3f, 1f);
-        SpawnChest();
+        //transform.localScale = new Vector3(3f, 3f, 1f);
+        //SpawnChest();
     }
 
-    void SpawnChest()
+    public void SpawnChest()
     {
         // Find random walkable tile
         do
@@ -43,6 +43,7 @@ public class OpenChest : MonoBehaviour
     void OpenTheChest()
     {
         Debug.Log("Chest opened! You win!");
+        GameObject.Find("Updater").GetComponent<Updater>().Win();        
         // Add more logic here: show UI, end game, reward player, etc.
     }
 }

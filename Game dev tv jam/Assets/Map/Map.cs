@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+    public PlayerMovement player;
+
+    public int numOfEnemies;
+    public GameObject enemy;
+
     public GameObject tile;
     public List<List<GameObject>> map = new List<List<GameObject>>();
 
@@ -17,8 +22,14 @@ public class Map : MonoBehaviour
     public int chestX { get; private set; }
     public int chestY { get; private set; }
 
-    void Start()
+    public void Start()
     {
+        var tiles = GameObject.FindGameObjectsWithTag("Tile");
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            Destroy(tiles[i]);
+        }
+
         for (int x = 0; x < sizeY; x++)
         {
             List<GameObject> row = new List<GameObject>();
@@ -70,6 +81,11 @@ public class Map : MonoBehaviour
                     map[x][y].GetComponent<SpriteRenderer>().color = Color.white;
                 }
             }
+        }
+
+        for (int i = 0; i < numOfEnemies; i++)
+        {
+            Instantiate(enemy);
         }
 
         SpawnChest();

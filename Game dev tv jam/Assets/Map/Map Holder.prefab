@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3847061786214597751
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4433838343534210372}
+  - component: {fileID: 5225418887706620177}
+  m_Layer: 0
+  m_Name: Map Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4433838343534210372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3847061786214597751}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.368771, y: 0.042815268, z: 0.034072865}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5225418887706620177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3847061786214597751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334079fca8c32d5469986e506d5a97c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  numOfEnemies: 3
+  enemy: {fileID: 3215797379018423351, guid: f2b72733af258a143b672cc197e5bea2, type: 3}
+  tile: {fileID: 986598756012602756, guid: 47cead78e895bfd4e926a2215255504f, type: 3}
+  sizeX: 20
+  sizeY: 20
+  tileSprites:
+  - {fileID: 58358999, guid: fc1679e5d3aa340478f06e9a1e3bdb8f, type: 3}
+  - {fileID: 708134574, guid: fc1679e5d3aa340478f06e9a1e3bdb8f, type: 3}
+  - {fileID: -600017446, guid: fc1679e5d3aa340478f06e9a1e3bdb8f, type: 3}
+  - {fileID: 6956764507690371452, guid: fc1679e5d3aa340478f06e9a1e3bdb8f, type: 3}
+  chestSprite: {fileID: 0}
