@@ -22,8 +22,11 @@ public class Map : MonoBehaviour
     public int chestX { get; private set; }
     public int chestY { get; private set; }
 
-    public void Start()
+    public void Awake()
     {
+        //sizeX = UnityEngine.Random.Range(30, 100);
+        //sizeY = UnityEngine.Random.Range(30, 100);
+
         var tiles = GameObject.FindGameObjectsWithTag("Tile");
         for (int i = 0; i < tiles.Length; i++)
         {
@@ -115,6 +118,7 @@ public class Map : MonoBehaviour
         return count;
     }
 
+    public Sprite chestskin;
     void SpawnChest()
     {
         int x, y;
@@ -132,11 +136,17 @@ public class Map : MonoBehaviour
         chestY = y;
 
         chest = new GameObject("Chest");
+        chest.tag = "chest";
         chest.transform.position = map[x][y].transform.position;
+        chest.transform.localScale = new Vector3(5, 5, 5);
 
         SpriteRenderer sr = chest.AddComponent<SpriteRenderer>();
         sr.sprite = chestSprite;
         sr.sortingOrder = 1;
+
+        OpenChest chestS = chest.AddComponent<OpenChest>();
+        chestS.player = GameObject.FindGameObjectWithTag("player").GetComponent<PlayerMovement>();
+        chestS.map = GameObject.FindGameObjectWithTag("map").GetComponent<Map>();
 
         map[x][y].GetComponent<Tile>().occupied = true;
         map[x][y].GetComponent<Tile>().occupiedBy = chest;

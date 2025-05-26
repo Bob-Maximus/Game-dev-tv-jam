@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
@@ -32,7 +33,10 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, map.map[xPos][yPos].transform.position, Time.deltaTime*5f);
+        if (map.map[xPos][yPos] != null)
+        {
+            transform.position = Vector3.Lerp(transform.position, map.map[xPos][yPos].transform.position, Time.deltaTime*5f);
+        }
 
         frameTimer += Time.deltaTime;
         if (frameTimer >= animationSpeed)
@@ -46,19 +50,22 @@ public class EnemyMovement : MonoBehaviour
 
     public void MoveTowardsPlayer()
     {
-        Vector2Int start = new Vector2Int(xPos, yPos);
-        Vector2Int target = new Vector2Int(player.xPos, player.yPos);
-
-        List<Vector2Int> path = FindShortestPath(start, target);
-
-        if (path.Count > 1)
+        if (map.map[xPos][yPos] != null)
         {
-            xPos = path[1].x;
-            yPos = path[1].y;
+            Vector2Int start = new Vector2Int(xPos, yPos);
+            Vector2Int target = new Vector2Int(player.xPos, player.yPos);
 
-            if (xPos == player.xPos && yPos == player.yPos)
+            List<Vector2Int> path = FindShortestPath(start, target);
+
+            if (path.Count > 1)
             {
-                GameOver();
+                xPos = path[1].x;
+                yPos = path[1].y;
+
+                if (xPos == player.xPos && yPos == player.yPos)
+                {
+                    GameOver();
+                }
             }
         }
     }

@@ -6,9 +6,15 @@ public class Updater : MonoBehaviour
 {
     public float tickSpeed;
 
+    public Sprite chestLook;
+
+    private bool playing = true;
+
     public PlayerMovement player;
     public List<EnemyMovement> enemies;
     public GameObject map;
+
+    public bool firstUpdate = false;
 
     public GameObject chest;  // Assign in inspector or find dynamically
 
@@ -22,8 +28,14 @@ public class Updater : MonoBehaviour
             enemies.Add(enemyObjects[i].GetComponent<EnemyMovement>());
         }
 
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && playing)
         {
+            UpdateGame();
+        }
+
+        if (!firstUpdate)
+        {
+            firstUpdate = true;
             UpdateGame();
         }
     }
@@ -65,6 +77,7 @@ public class Updater : MonoBehaviour
             }
         }
 
+        chest = GameObject.FindGameObjectWithTag("chest");
         // Darken chest based on distance from player
         if (chest != null)
         {
@@ -75,6 +88,7 @@ public class Updater : MonoBehaviour
                 chestSprite.color = Color.black;
             else
                 chestSprite.color = Color.white;
+            chestSprite.sprite = chestLook;            
         }
     }
 
@@ -97,12 +111,14 @@ public class Updater : MonoBehaviour
     public void Win()
     {
         winUi.SetActive(true);
+        playing = false;
     }
     
     public GameObject loseUi;
 
     public void Lose()
     {
+        playing = false;
         loseUi.SetActive(true);
     }
 }

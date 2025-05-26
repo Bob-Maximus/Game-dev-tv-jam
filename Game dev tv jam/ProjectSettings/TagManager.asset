@@ -8,6 +8,7 @@ TagManager:
   - Tile
   - player
   - map
+  - chest
   layers:
   - Default
   - TransparentFX
